@@ -1,0 +1,15 @@
+include: _default_template_yaml
+dataset_path: <add absolute ref>/CausalVQA/experiments/Causal_VQA_test_set/Counterfactual_med/
+dataset_kwargs:
+  load_from_disk: true
+
+task: counterfactual_med
+dataset_name: Counterfactual_med
+test_split: valid
+metric_list:
+  - metric: paired_accuracy 
+    aggregation: !function utils.med_cou_pair_accuracy
+    higher_is_better: true
+  - metric: single_accuracy 
+    aggregation: !function utils.med_cou_sing_accuracy
+    higher_is_better: true

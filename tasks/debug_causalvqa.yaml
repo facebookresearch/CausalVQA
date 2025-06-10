@@ -1,0 +1,15 @@
+group: debug_causalvqa
+task: 
+  - debug_anticipation_easy
+  - debug_counterfactual_easy
+  - debug_descriptive_easy
+  - debug_hypothetical_easy
+  - debug_planning_easy
+aggregate_metric_list:
+  - aggregation: mean
+    metric: paired_accuracy
+    weight_by_size: true 
+  - aggregation: mean
+    metric: single_accuracy
+    weight_by_size: true 
+

@@ -1,0 +1,386 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "CausalVQA",
+  "description": "\n        We introduce CausalVQA, a benchmark dataset for video question answering (VQA) composed of question-answer pairs that probe models' understanding of causality in the physical world. Existing VQA benchmarks either tend to focus on surface perceptual understanding of real-world videos, or on narrow physical reasoning questions created using simulation environments. CausalVQA fills an important gap by presenting challenging questions that are grounded in real-world scenarios, while focusing on models' ability to predict the likely outcomes of different actions and events through five question types -- counterfactual, hypothetical, anticipation, planning and descriptive. We designed quality control mechanisms that prevent models from exploiting trivial shortcuts, requiring models to base their answers on deep visual understanding instead of linguistic cues. We find that current frontier multimodal models (e.g. GPT-4o: 51%, Gemini 2.5 Flash: 62%) fall substantially below human performance (85%) on the benchmark (chance: 4%), especially on anticipation and hypothetical questions. This highlights a challenge for current systems to leverage spatial-temporal reasoning, understanding of physical principles, and comprehension of possible alternatives to make accurate predictions in real-world settings.\n        ",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "creator": {
+    "@type": "Organization",
+    "name": "Meta",
+    "url": "https://ai.meta.com/"
+  },
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/ + Third party content pulled from other locations (i.e., EgoExo4D) are subject to their own licenses and you may have other legal obligations or restrictions that govern your use of that content. The use of CausalVQA is limited to evaluation purposes, where it can be utilized to generate tags for classifying visual content, such as videos and images. All other uses, including generative AI applications that create or automate new content (e.g. audio, visual, or text-based), are prohibited.",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "CausalVQA.zip",
+      "name": "CausalVQA.zip",
+      "contentUrl": "CausalVQA.zip", 
+      "encodingFormat": "application/zip",
+      "sha256": "a48684b9ef0b9b824b21225ceac23e92a43ec64cfebead20bf15978a399880c5"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "debug-annotations",
+      "name": "debug-annotations",
+      "description": "debug set metadata",
+      "containedIn": {
+        "@id": "CausalVQA.zip"
+      },
+      "contentUrl": "CausalVQA/debug/debug_metadata.csv",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "test-annotations",
+      "name": "test-annotations",
+      "description": "test set metadata",
+      "containedIn": {
+        "@id": "CausalVQA.zip"
+      },
+      "contentUrl": "CausalVQA/test/test_metadata.csv",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "video-clips",
+      "name": "video-clips",
+      "description": "EgoExo4D video clips for CausalVQA",
+      "containedIn": {
+        "@id": "CausalVQA.zip"
+      },
+      "encodingFormat": "video/mp4",
+      "includes": "*/videos/*.mp4"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "debug_set",
+      "name": "debug_set",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "debug-qid",
+          "name": "qid",
+          "description": "question identifier guid",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "qid"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-type",
+          "name": "type",
+          "description": "one-word question type",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-question",
+          "name": "question",
+          "description": "question text",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-choices1",
+          "name": "choices1",
+          "description": "pipe separated list of possible answers",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "choices1"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-correct1",
+          "name": "correct1",
+          "description": "target answer from choices1",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "correct1"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-choices2",
+          "name": "choices2",
+          "description": "alternative pipe separated list of possible answers",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "choices2"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-correct2",
+          "name": "correct2",
+          "description": "target answer from choices2",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "correct2"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-difficulty",
+          "name": "difficulty",
+          "description": "difficulty level for question",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "difficulty"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "debug-file_name",
+          "name": "file_name",
+          "description": "the video file for the question",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "debug-annotations"
+            },
+            "extract": {
+              "column": "renamed_video"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "test_set",
+      "name": "test_set",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "qid",
+          "name": "qid",
+          "description": "question identifier guid",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "qid"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "type",
+          "name": "type",
+          "description": "one-word question type",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "question",
+          "name": "question",
+          "description": "question text",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "choices1",
+          "name": "choices1",
+          "description": "pipe separated list of possible answers",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "choices1"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "correct1",
+          "name": "correct1",
+          "description": "target answer from choices1--blank for test set",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "correct1"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "choices2",
+          "name": "choices2",
+          "description": "alternative pipe separated list of possible answers",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "choices2"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "correct2",
+          "name": "correct2",
+          "description": "target answer from choices2--blank for test set",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "correct2"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "difficulty",
+          "name": "difficulty",
+          "description": "difficulty level for question",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "difficulty"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "file_name",
+          "name": "file_name",
+          "description": "the video file for the question",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test-annotations"
+            },
+            "extract": {
+              "column": "renamed_video"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

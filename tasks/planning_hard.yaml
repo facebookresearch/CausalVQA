@@ -1,0 +1,15 @@
+include: _default_template_yaml
+dataset_path: <add absolute ref>/CausalVQA/experiments/Causal_VQA_test_set/Planning_hard/
+dataset_kwargs:
+  load_from_disk: true
+
+task: planning_hard
+dataset_name: Planning_hard
+test_split: valid
+metric_list:
+  - metric: paired_accuracy 
+    aggregation: !function utils.hard_pla_pair_accuracy
+    higher_is_better: true
+  - metric: single_accuracy 
+    aggregation: !function utils.hard_pla_sing_accuracy
+    higher_is_better: true

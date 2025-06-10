@@ -1,0 +1,35 @@
+task: causalvqa
+output_type: generate_until
+doc_to_visual: !function utils.causalvqa_doc_to_visual
+doc_to_text: !function utils.causalvqa_doc_to_text
+doc_to_target: "answer"
+generation_kwargs:
+  max_new_tokens: 1024
+
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: "You are an English Language expert at answering multiple choice questions **in English only**. You follow the following steps for this task:
+                 1. Read the Question. 
+                 2. Observe the clip.
+                 3. Read the list of Possible Answers.
+                 4. Choose Your Answer from the Possible Answers -- pick the one that is most correct. You must choose an answer, even if you are not sure.
+                 5. Record Your Answer Letter that corresponds with Your Answer from the Possible Answers.
+                 
+                 Responses **must be in English** and **follow this format** specifically:
+                 -----
+                 Your Answer Letter: The letter corresponding with Your Answer returned as a capitalized English letter A-E END
+                 -----
+                 
+                 Here is an example of what output may look like:
+                 Your Answer Letter: C END
+                 
+                 Select the best option that accurately addresses the following question: \n"
+    post_prompt: "\nEven when unsure, **always** supply a best guess from the options A-E for Your Answer Letter. 
+                  Please double check to ensure your response fits the requested format. **Do not output extra text**.
+                  Missing the END line terminator is a common mistake you have made in the past.
+                  Outputting more than requested is a mistake. **Only give the answer letter in the requested format**.
+                  Another common mistake is not returning Your Answer Letter in the correct format. 
+                  Another common mistake is returning things other than Your Answer Letter. Follow the format.
+                  A final common mistake is choosing to not answer a question."
+
+process_results: !function utils.causalvqa_process_results

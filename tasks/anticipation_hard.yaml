@@ -1,0 +1,15 @@
+include: _default_template_yaml
+dataset_path: <add absolute ref>/CausalVQA/experiments/Causal_VQA_test_set/Anticipation_hard/
+dataset_kwargs:
+  load_from_disk: true
+
+task: anticipation_hard
+dataset_name: Anticipation_hard
+test_split: valid
+metric_list:
+  - metric: paired_accuracy 
+    aggregation: !function utils.hard_ant_pair_accuracy
+    higher_is_better: true
+  - metric: single_accuracy 
+    aggregation: !function utils.hard_ant_sing_accuracy
+    higher_is_better: true

@@ -1,0 +1,24 @@
+group: causalvqa
+task: 
+  - anticipation_easy
+  - counterfactual_easy
+  - descriptive_easy
+  - hypothetical_easy
+  - planning_easy
+  - anticipation_med
+  - counterfactual_med
+  - descriptive_med
+  - hypothetical_med
+  - planning_med
+  - anticipation_hard
+  - counterfactual_hard
+  - descriptive_hard
+  - hypothetical_hard
+  - planning_hard
+aggregate_metric_list:
+  - aggregation: mean
+    metric: paired_accuracy
+    weight_by_size: false 
+  - aggregation: mean
+    metric: single_accuracy
+    weight_by_size: false 
