@@ -8,7 +8,8 @@ from typing import Union
 import numpy as np
 import yaml
 from loguru import logger as eval_logger
-
+from lmms_eval.tasks._task_utils.file_utils import generate_submission_file
+import pandas as pd
 
 def causalvqa_doc_to_visual(doc):
     video_path = doc["video_path"]
@@ -97,13 +98,26 @@ def causalvqa_process_results(doc, results):
     gt_option_letter = doc["answer"]
 
     qid = doc['id']
+    n = doc['n']
 
     # Calculate the score using mcq_acc function
     score = mcq_acc(gt_option_letter, pred)
 
-    data_dict = {"qid": qid, "pred_answer": pred, "gt_answer": gt_option_letter, "score": score}
+    data_dict = {"qid": qid, "n": n, "pred_answer": pred, "gt_answer": gt_option_letter, "score": score}
 
     return {"single_accuracy": data_dict, "paired_accuracy": data_dict}
+
+
+def generate_leaderboard_submission_df(results, subset="causalvqa"):
+    ldb_rows = []
+    for row in results:
+        ldb_row = {
+            "data_name": subset,
+            "row_id": row["qid"]+"_"+str(row['n']),
+            "model_answer": row["pred_answer"],
+        }
+        ldb_rows.append(ldb_row)
+    return pd.DataFrame(ldb_rows)
 
 
 def causalvqa_aggregate_results(results):
@@ -138,160 +152,164 @@ def causalvqa_aggregate_results(results):
 
     return single_accuracy * 100, paired_accuracy * 100
 
-def single_accuracy(results,  task="", subset="causalvqa"):
+def single_accuracy(results, args, task="", subset="causalvqa"):
     sa, _ = causalvqa_aggregate_results(results)
     return sa
 
-def paired_accuracy(results,  task="", subset="causalvqa"):
+def paired_accuracy(results, args, task="", subset="causalvqa"):
     _, pa = causalvqa_aggregate_results(results)
+    ldb_file = generate_submission_file(f"{subset}_{task}_valid.jsonl", args)
+    ldb = generate_leaderboard_submission_df(results, subset=subset)
+    ldb["task"] = task
+    ldb.to_json(ldb_file, lines=True, orient="records")
     return pa
 
 def easy_des_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Descriptive_easy", subset="causalvqa"
+        results, args, task="Descriptive_easy", subset="causalvqa"
     )
 
 def easy_ant_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Anticipation_easy", subset="causalvqa"
+        results, args, task="Anticipation_easy", subset="causalvqa"
     )
 
 def easy_cou_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Counterfactual_easy", subset="causalvqa"
+        results, args, task="Counterfactual_easy", subset="causalvqa"
     )
 
 def easy_pla_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Planning_easy", subset="causalvqa"
+        results, args, task="Planning_easy", subset="causalvqa"
     )
 
 def easy_hyp_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Hypothetical_easy", subset="causalvqa"
+        results, args, task="Hypothetical_easy", subset="causalvqa"
     )
 
 def easy_des_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Descriptive_easy", subset="causalvqa"
+        results, args, task="Descriptive_easy", subset="causalvqa"
     )
 
 def easy_ant_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Anticipation_easy", subset="causalvqa"
+        results, args, task="Anticipation_easy", subset="causalvqa"
     )
 
 def easy_cou_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Counterfactual_easy", subset="causalvqa"
+        results, args, task="Counterfactual_easy", subset="causalvqa"
     )
 
 def easy_pla_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Planning_easy", subset="causalvqa"
+        results, args, task="Planning_easy", subset="causalvqa"
     )
 
 def easy_hyp_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Hypothetical_easy", subset="causalvqa"
+        results, args, task="Hypothetical_easy", subset="causalvqa"
     )
 
 def med_des_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Descriptive_med", subset="causalvqa"
+        results, args, task="Descriptive_med", subset="causalvqa"
     )
 
 def med_ant_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Anticipation_med", subset="causalvqa"
+        results, args, task="Anticipation_med", subset="causalvqa"
     )
 
 def med_cou_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Counterfactual_med", subset="causalvqa"
+        results, args, task="Counterfactual_med", subset="causalvqa"
     )
 
 def med_pla_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Planning_med", subset="causalvqa"
+        results, args, task="Planning_med", subset="causalvqa"
     )
 
 def med_hyp_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Hypothetical_med", subset="causalvqa"
+        results, args, task="Hypothetical_med", subset="causalvqa"
     )
 
 def med_des_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Descriptive_med", subset="causalvqa"
+        results, args, task="Descriptive_med", subset="causalvqa"
     )
 
 def med_ant_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Anticipation_med", subset="causalvqa"
+        results, args, task="Anticipation_med", subset="causalvqa"
     )
 
 def med_cou_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Counterfactual_med", subset="causalvqa"
+        results, args, task="Counterfactual_med", subset="causalvqa"
     )
 
 def med_pla_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Planning_med", subset="causalvqa"
+        results, args, task="Planning_med", subset="causalvqa"
     )
 
 def med_hyp_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Hypothetical_med", subset="causalvqa"
+        results, args, task="Hypothetical_med", subset="causalvqa"
     )
 
 def hard_des_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Descriptive_hard", subset="causalvqa"
+        results, args, task="Descriptive_hard", subset="causalvqa"
     )
 
 def hard_ant_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Anticipation_hard", subset="causalvqa"
+        results, args, task="Anticipation_hard", subset="causalvqa"
     )
 
 def hard_cou_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Counterfactual_hard", subset="causalvqa"
+        results, args, task="Counterfactual_hard", subset="causalvqa"
     )
 
 def hard_pla_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Planning_hard", subset="causalvqa"
+        results, args, task="Planning_hard", subset="causalvqa"
     )
 
 def hard_hyp_pair_accuracy(results, args):
     return paired_accuracy(
-        results,  task="Hypothetical_hard", subset="causalvqa"
+        results, args, task="Hypothetical_hard", subset="causalvqa"
     )
 
 def hard_des_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Descriptive_hard", subset="causalvqa"
+        results, args, task="Descriptive_hard", subset="causalvqa"
     )
 
 def hard_ant_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Anticipation_hard", subset="causalvqa"
+        results, args, task="Anticipation_hard", subset="causalvqa"
     )
 
 def hard_cou_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Counterfactual_hard", subset="causalvqa"
+        results, args, task="Counterfactual_hard", subset="causalvqa"
     )
 
 def hard_pla_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Planning_hard", subset="causalvqa"
+        results, args, task="Planning_hard", subset="causalvqa"
     )
 
 def hard_hyp_sing_accuracy(results, args):
     return single_accuracy(
-        results,  task="Hypothetical_hard", subset="causalvqa"
+        results, args, task="Hypothetical_hard", subset="causalvqa"
     )
